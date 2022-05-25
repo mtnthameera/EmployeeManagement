@@ -17,6 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Table(name = "employee")
 public class Employee {
 
     @Id

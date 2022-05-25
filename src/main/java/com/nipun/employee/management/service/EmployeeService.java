@@ -14,7 +14,7 @@ public interface EmployeeService {
 
     List<Employee> getEmployees();
 
-    Employee addEmployee(Employee employee);
+    ResponseEntity<ApiResponse> addEmployee(Employee employee);
 
     Employee getEmployeeById(Long empId);
 
