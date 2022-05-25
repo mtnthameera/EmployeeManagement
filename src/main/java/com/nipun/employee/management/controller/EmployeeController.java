@@ -2,6 +2,7 @@ package com.nipun.employee.management.controller;
 
 import com.nipun.employee.management.exception.ApiResponse;
 import com.nipun.employee.management.model.Employee;
+import com.nipun.employee.management.model.EmployeeDTO;
 import com.nipun.employee.management.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class EmployeeController {
     EmployeeService employeeService;
 
     @GetMapping("/employees")
-    public List<Employee> getEmployees() {
+    public List<EmployeeDTO> getEmployees() {
         return employeeService.getEmployees();
     }
 
@@ -31,7 +32,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees/{empId}")
-    public Employee getEmployeeById(@PathVariable Long empId) {
+    public EmployeeDTO getEmployeeById(@PathVariable Long empId) {
         return employeeService.getEmployeeById(empId);
     }
 

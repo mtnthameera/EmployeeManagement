@@ -2,6 +2,7 @@ package com.nipun.employee.management.service;
 
 import com.nipun.employee.management.exception.ApiResponse;
 import com.nipun.employee.management.model.Employee;
+import com.nipun.employee.management.model.EmployeeDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -12,11 +13,11 @@ import java.util.List;
 
 public interface EmployeeService {
 
-    List<Employee> getEmployees();
+    List<EmployeeDTO> getEmployees();
 
     ResponseEntity<ApiResponse> addEmployee(Employee employee);
 
-    Employee getEmployeeById(Long empId);
+    EmployeeDTO getEmployeeById(Long empId);
 
     ResponseEntity<ApiResponse> removeEmployee(Long empId);
 

@@ -4,6 +4,8 @@ import com.nipun.employee.management.DAO.EmployeeDao;
 import com.nipun.employee.management.exception.ApiResponse;
 import com.nipun.employee.management.exception.EmployeeNotFoundException;
 import com.nipun.employee.management.model.Employee;
+import com.nipun.employee.management.model.EmployeeDTO;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author Nipun on 23/5/22
@@ -28,11 +31,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     EmployeeDao employeeDao;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
     @Transactional
-    public List<Employee> getEmployees() {
+    public List<EmployeeDTO> getEmployees() {
         LOGGER.info("Fetching Employee List");
-        return employeeDao.getAllEmployees();
+         return employeeDao.getAllEmployees().stream()
+                 .map(emp -> modelMapper.map(emp, EmployeeDTO.class))
+                 .collect(Collectors.toList());
     }
 
     @Override
@@ -45,13 +53,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getEmployeeById(Long empId) {
+    public EmployeeDTO getEmployeeById(Long empId) {
         LOGGER.info("Fetching Employee. empId {}", empId);
         Optional<Employee> employeeOptional = employeeDao.getEmployeeById(empId);
         if(!employeeOptional.isPresent()){
             throw new EmployeeNotFoundException("Invalid Employee ID.");
         }
-        return employeeOptional.get();
+        return modelMapper.map(employeeOptional.get(),EmployeeDTO.class);
     }
 
     @Override
