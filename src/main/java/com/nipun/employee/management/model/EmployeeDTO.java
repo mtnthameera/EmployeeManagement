@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-
 /**
  * @author Nipun on 25/5/22
  */
@@ -17,10 +15,10 @@ import javax.persistence.Column;
 @Builder
 public class EmployeeDTO {
 
- //private Long employeeId;
- private String firstName;
- private String lastName;
- private String emailId;
- private String designation;
+    //private Long employeeId;
+    private String firstName;
+    private String lastName;
+    private String emailId;
+    private String designation;
 
 }

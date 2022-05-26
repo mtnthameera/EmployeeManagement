@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -34,13 +33,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     ModelMapper modelMapper;
 
+
     @Override
-    @Transactional
     public List<EmployeeDTO> getEmployees() {
         LOGGER.info("Fetching Employee List");
-         return employeeDao.getAllEmployees().stream()
-                 .map(emp -> modelMapper.map(emp, EmployeeDTO.class))
-                 .collect(Collectors.toList());
+        return employeeDao.getAllEmployees().stream()
+                .map(emp -> modelMapper.map(emp, EmployeeDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -55,21 +54,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeDTO getEmployeeById(Long empId) {
         LOGGER.info("Fetching Employee. empId {}", empId);
-        Optional<Employee> employeeOptional = employeeDao.getEmployeeById(empId);
-        if(!employeeOptional.isPresent()){
-            throw new EmployeeNotFoundException("Invalid Employee ID.");
-        }
-        return modelMapper.map(employeeOptional.get(),EmployeeDTO.class);
+        return employeeDao.getEmployeeById(empId)
+                .map(employeeOptional -> modelMapper.map(employeeOptional, EmployeeDTO.class))
+                .orElseThrow(() -> new EmployeeNotFoundException("Invalid Employee ID : " + empId));
     }
 
     @Override
     public ResponseEntity<ApiResponse> removeEmployee(Long empId) {
         LOGGER.info("Removing Employee. empId {}", empId);
-        Optional<Employee> employeeOptional = employeeDao.getEmployeeById(empId);
-        if(!employeeOptional.isPresent()){
-            LOGGER.info("Employee {} Not found", empId);
-            throw new EmployeeNotFoundException("Invalid Employee ID.");
-        }
+        employeeDao.getEmployeeById(empId)
+                .orElseThrow(() -> {
+                    LOGGER.info("Employee {} Not found", empId);
+                    return new EmployeeNotFoundException("Invalid Employee ID.");
+                });
         employeeDao.removeEmployee(empId);
         LOGGER.info("Employee {} removed.", empId);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK,
@@ -79,11 +76,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public ResponseEntity<ApiResponse> updateEmployee(Long empId, Employee employee) {
         LOGGER.info("Updating Employee. empId {}", empId);
-        Optional<Employee> employeeOptional = employeeDao.getEmployeeById(empId);
-        if(!employeeOptional.isPresent()){
-            LOGGER.info("Employee {} Not found", empId);
-            throw new EmployeeNotFoundException("Invalid Employee ID.");
-        }
+        employeeDao.getEmployeeById(empId)
+                .orElseThrow(() -> {
+                    LOGGER.info("Employee {} Not found", empId);
+                    return new EmployeeNotFoundException("Invalid Employee ID : " + empId);
+                });
         employeeDao.updateEmployee(employee);
         LOGGER.info("Employee {} details updated.", empId);
         return ResponseEntity.ok(new ApiResponse(HttpStatus.OK,

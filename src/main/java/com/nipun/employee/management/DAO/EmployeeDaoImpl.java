@@ -60,6 +60,5 @@ public class EmployeeDaoImpl implements EmployeeDao{
     public void updateEmployee(Employee employee) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.merge(employee);
-        //currentSession.update(employee);;
     }
 }
